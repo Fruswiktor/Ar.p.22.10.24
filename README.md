@@ -17,33 +17,34 @@ The app draws circles in the selected color at the user's touch position.
 ## Installation
 1. **Setup the Arduino IDE**: Make sure you have the Arduino IDE installed on your computer.
 2. **Install M5Tough Library**: In the Arduino IDE, go to `Sketch` -> `Include Library` -> `Manage Libraries...`, search for "M5Tough", and install it.
-3. **Upload the Code**: Copy the provided code into a new Arduino sketch. Connect your M5Tough device to your computer and upload the sketch.
+# M5Tough Touchscreen Drawing Application
 
-## Code Explanation
+## Overview
+This application allows users to draw on a touchscreen using two color buttons (Red and Blue) and a reset button. Users can select a color and draw squares on a designated drawing area by touching the screen. The reset button clears the drawing area.
 
-### Button Definitions
-- **Button 1 ("RED")**: Sets the current color to RED when tapped.
-- **Button 2 ("BLUE")**: Sets the current color to BLUE when tapped.
-- **Button 3 ("RESET")**: Restarts the ESP32 device when tapped.
+## Features
+- Touchscreen interaction for drawing
+- Color selection for drawing (Red and Blue)
+- Clear drawing area with the Reset button
 
-### Main Loop
-The main loop continuously checks for touch events and draws a circle at the current touch position using the selected color.
+## Requirements
+- M5Tough device
+- Arduino IDE with M5Tough library installed
 
-### Event Handlers
-- `eventDisplayBUTTON1`: Changes the color to RED.
-- `eventDisplayBUTTON2`: Changes the color to BLUE.
-- `eventDisplayBUTTON3`: Restarts the device.
-
-### Drawing Function
-- `circle(Point p, uint16_t c)`: Draws a filled circle at the specified point with the specified color.
+## Installation
+1. Clone this repository or download the source code.
+2. Open the Arduino IDE.
+3. Create a new project and copy the code into the editor.
+4. Install the M5Tough library via the Library Manager (Sketch > Include Library > Manage Libraries).
+5. Connect your M5Tough device to your computer.
+6. Select the correct board and port from the Tools menu.
+7. Upload the code to the device.
 
 ## Usage
-1. Tap the "RED" button to select the red color.
-2. Tap the "BLUE" button to select the blue color.
-3. Touch anywhere on the screen to draw a circle in the selected color.
-4. Tap the "RESET" button to restart the device.
+- Press the "RED" button to select red color for drawing.
+- Press the "BLUE" button to select blue color for drawing.
+- Touch within the drawing area to draw squares.
+- Press the "RESET" button to clear the drawing area.
 
-## Troubleshooting
-- If the device does not respond, check the connections and ensure the M5Tough library is correctly installed.
-- If the screen does not display correctly, try resetting the device.
-
+## Author
+[Frus]

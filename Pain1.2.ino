@@ -1,110 +1,99 @@
 /*
- * M5Tough Painting Application
- * 
- * This application leverages the M5Tough library to create a simple
- * graphical interface on the M5Tough device. It features three buttons 
- * for color selection (RED or BLUE) and a reset function.
- * 
- * Button Functionalities:
- * - Button 1 ("RED"): Sets the current drawing color to RED when pressed.
- * - Button 2 ("BLUE"): Sets the current drawing color to BLUE when pressed.
- * - Button 3 ("RESET"): Restarts the ESP32 device when pressed.
- * 
- * The display is initialized with a black background, and buttons are 
- * rendered with defined colors for their active and inactive states.
- * 
- * Ensure the M5Tough library is properly included and configured for this 
- * code to work correctly.
+ * M5Tough Touchscreen Drawing Application
+ *
+ * This application allows users to draw on a touchscreen using two color buttons
+ * (Red and Blue) and a reset button. Users can select a color and draw squares
+ * on a designated drawing area by touching the screen. The reset button clears 
+ * the drawing area. The application uses the M5Tough library for handling 
+ * touchscreen input and button events.
+ *
+ * Features:
+ * - Touchscreen interaction for drawing
+ * - Color selection for drawing (Red and Blue)
+ * - Clear drawing area with the Reset button
+ *
+ * Author: Frus
+ * Date: 23.10.2024
  */
 
-#include <M5Tough.h>
-#include <Arduino.h>
 
-// Define button colors for their active (on) and inactive (off) states.
-ButtonColors on_clrs = {GREEN, WHITE, WHITE}; // Active state colors
-ButtonColors off_clrs = {BLACK, WHITE, WHITE}; // Inactive state colors
 
-// Create button instances with specified position, size, label, and color states.
-Button bl(20, 200, 80, 40, false, "RED", off_clrs, on_clrs, MC_DATUM);  // RED button
-Button b2(120, 200, 80, 40, false, "BLUE", off_clrs, on_clrs, MC_DATUM); // BLUE button
-Button b3(220, 200, 80, 40, false, "RESET", off_clrs, on_clrs, MC_DATUM); // RESET button
+#include <M5Tough.h>  // Include the M5Tough library for touchscreen functionality
+#include <Arduino.h>  // Include the Arduino core library
 
-// Variable to hold the currently selected color.
-uint16_t currentColor = RED; // Default color set to RED
+// Define button colors for on and off states
+ButtonColors on_clrs = {GREEN, WHITE, WHITE};
+ButtonColors off_clrs = {BLACK, WHITE, WHITE};
 
-/**
- * @brief Initializes the M5Tough device and sets up the display.
- */
+// Create buttons with specified properties (position, size, label, colors, etc.)
+Button bl(20, 200, 80, 40, false, "RED", off_clrs, on_clrs, MC_DATUM); // Red button
+Button b2(120, 200, 80, 40, false, "BLUE", off_clrs, on_clrs, MC_DATUM); // Blue button
+Button b3(220, 200, 80, 40, false, "RESET", off_clrs, on_clrs, MC_DATUM); // Reset button
+
+// Define the drawing area dimensions
+const int drawingAreaX = 20; // X coordinate of the drawing area
+const int drawingAreaY = 20; // Y coordinate of the drawing area
+const int drawingAreaWidth = 280; // Width of the drawing area
+const int drawingAreaHeight = 160; // Height of the drawing area
+
+uint16_t currentColor = RED; // Variable to store the current drawing color
+
 void setup() {
-  M5.begin(); // Initialize the M5Tough hardware
-  M5.Lcd.fillScreen(BLACK); // Set the screen background to black
-  M5.Lcd.setTextSize(2); // Set the text size for display
-  M5.Lcd.setTextDatum(MC_DATUM); // Center text for button labels
-  M5.Buttons.draw(); // Render buttons on the screen
+  M5.begin(); // Initialize the M5Tough device
+  M5.Lcd.fillScreen(BLACK); // Set the background color to black
+  M5.Lcd.fillRect(drawingAreaX, drawingAreaY, drawingAreaWidth, drawingAreaHeight, WHITE); // Draw the drawing area
+  M5.Lcd.setTextSize(2); // Set the text size for buttons
+  M5.Lcd.setTextDatum(MC_DATUM); // Set the text datum to center
+  M5.Buttons.draw(); // Draw buttons on the screen
 
-  // Attach event handlers for button press events
-  bl.addHandler(eventDisplayBUTTON1, E_TAP); // RED button event
-  b2.addHandler(eventDisplayBUTTON2, E_TAP); // BLUE button event
-  b3.addHandler(eventDisplayBUTTON3, E_TAP); // RESET button event
+  // Add event handlers for button taps
+  bl.addHandler(eventDisplayBUTTON1, E_TAP);
+  b2.addHandler(eventDisplayBUTTON2, E_TAP);
+  b3.addHandler(eventDisplayBUTTON3, E_TAP);
 }
 
-/**
- * @brief Event handler for the RED button.
- * 
- * Sets the current drawing color to RED when the button is tapped.
- *
- * @param e The event object containing event details.
- */
+// Event handler for the RED button
 void eventDisplayBUTTON1(Event& e) {
-  if (e.type == E_TAP) { // Check if the event is a tap
-    currentColor = RED; // Update current color to RED
+  if (e.type == E_TAP) { // Check if the event type is a tap
+    currentColor = RED; // Set the current color to red
   }
 }
 
-/**
- * @brief Event handler for the BLUE button.
- * 
- * Sets the current drawing color to BLUE when the button is tapped.
- *
- * @param e The event object containing event details.
- */
+// Event handler for the BLUE button
 void eventDisplayBUTTON2(Event& e) {
-  if (e.type == E_TAP) { // Check if the event is a tap
-    currentColor = BLUE; // Update current color to BLUE
+  if (e.type == E_TAP) { // Check if the event type is a tap
+    currentColor = BLUE; // Set the current color to blue
   }
 }
 
-/**
- * @brief Event handler for the RESET button.
- * 
- * Restarts the ESP32 device when the button is tapped.
- *
- * @param e The event object containing event details.
- */
+// Event handler for the RESET button
 void eventDisplayBUTTON3(Event& e) {
-  ESP.restart(); // Restart the ESP32 device
+  M5.Lcd.fillRect(drawingAreaX, drawingAreaY, drawingAreaWidth, drawingAreaHeight, WHITE); // Clear the drawing area
 }
 
-/**
- * @brief Main loop that handles button events and drawing on the screen.
- */
+// Main loop to continuously check for events
 void loop() {
-  M5.update(); // Update the state of the M5Tough device
+  M5.update(); // Update the M5Tough state
 
-  Event& e = M5.Buttons.event; // Reference to the current button event
+  Event& e = M5.Buttons.event; // Reference the current button event
 
-  // Check if the event indicates a movement or gesture
+  // Check for movement or gesture events
   if (e & (E_MOVE | E_GESTURE)) {
-    circle(e.to, currentColor); // Draw a circle at the touch position with the selected color
+    // If the event position is inside the drawing area, draw a square
+    if (isInsideDrawingArea(e.to)) {
+      drawSquare(e.to, currentColor); // Draw a square at the event location with the current color
+    }
   }
 }
 
-/**
- * @brief Draws a filled circle at a specified point with a specified color.
- * 
- * @param p The point where the circle should be drawn.
- * @param c The color of the circle.
- */
-void circle(Point p, uint16_t c) {
-  M5.Lcd.fillCircle(p.x, p.y, 5, c); // Draw a circle with radius 5 at the specified point
+// Function to check if a point is inside the drawing area
+bool isInsideDrawingArea(Point p) {
+  return (p.x >= drawingAreaX && p.x <= drawingAreaX + drawingAreaWidth &&
+          p.y >= drawingAreaY && p.y <= drawingAreaY + drawingAreaHeight); // Return true if inside
+}
+
+// Function to draw a square at a given point with a specified color
+void drawSquare(Point p, uint16_t c) {
+  int squareSize = 10; // Define the size of the square
+  M5.Lcd.fillRect(p.x - squareSize / 2, p.y - squareSize / 2, squareSize, squareSize, c); // Draw the square centered at the point
 }
