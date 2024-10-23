@@ -45,6 +45,12 @@ const int drawingAreaHeight = 160;     ///< Height of the drawing area.
 
 uint16_t currentColor = RED;            ///< Variable to store the current drawing color.
 
+/** 
+ * @brief Setup function to initialize the device and UI components.
+ * 
+ * This function initializes the M5Tough device, sets up the display, 
+ * creates buttons, and attaches event handlers for user interactions.
+ */
 void setup() {
     M5.begin();  // Initialize the M5Tough device.
     M5.Lcd.fillScreen(BLACK);  // Set the background color to black.
