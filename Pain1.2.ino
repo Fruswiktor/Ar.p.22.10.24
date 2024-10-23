@@ -1,5 +1,5 @@
 /*
- * M5Tough Color Picker Example
+ * M5Tough Paiting on M5Tough
  *
  * This program utilizes the M5Tough library to create a simple interface
  * with three buttons on an M5Tough device. The buttons allow the user to 
