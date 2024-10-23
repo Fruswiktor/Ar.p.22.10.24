@@ -1,98 +1,110 @@
 /*
- * M5Tough Paiting on M5Tough
- *
- * This program utilizes the M5Tough library to create a simple interface
- * with three buttons on an M5Tough device. The buttons allow the user to 
- * select a color (RED or BLUE) and to reset the device.
- *
- * Button functionalities:
- * - Button 1 ("RED"): Sets the current color to RED when tapped.
- * - Button 2 ("BLUE"): Sets the current color to BLUE when tapped.
- * - Button 3 ("RESET"): Restarts the ESP32 device when tapped.
- *
- * The main loop continuously checks for button events and draws a circle
- * at the current touch position with the selected color.
- *
- * The screen is initialized in BLACK, and the buttons are displayed with
- * specified colors for their on/off states.
- *
- * Note: Ensure that the M5Tough library is included and configured correctly.
+ * M5Tough Painting Application
+ * 
+ * This application leverages the M5Tough library to create a simple
+ * graphical interface on the M5Tough device. It features three buttons 
+ * for color selection (RED or BLUE) and a reset function.
+ * 
+ * Button Functionalities:
+ * - Button 1 ("RED"): Sets the current drawing color to RED when pressed.
+ * - Button 2 ("BLUE"): Sets the current drawing color to BLUE when pressed.
+ * - Button 3 ("RESET"): Restarts the ESP32 device when pressed.
+ * 
+ * The display is initialized with a black background, and buttons are 
+ * rendered with defined colors for their active and inactive states.
+ * 
+ * Ensure the M5Tough library is properly included and configured for this 
+ * code to work correctly.
  */
-
-
 
 #include <M5Tough.h>
 #include <Arduino.h>
 
-// Define button colors for on and off states
-ButtonColors on_clrs = {GREEN, WHITE, WHITE};
-ButtonColors off_clrs = {BLACK, WHITE, WHITE};
+// Define button colors for their active (on) and inactive (off) states.
+ButtonColors on_clrs = {GREEN, WHITE, WHITE}; // Active state colors
+ButtonColors off_clrs = {BLACK, WHITE, WHITE}; // Inactive state colors
 
-// Create buttons with specified positions, sizes, and labels
-Button bl(20, 200, 80, 40, false, "RED", off_clrs, on_clrs, MC_DATUM);
-Button b2(120, 200, 80, 40, false, "BLUE", off_clrs, on_clrs, MC_DATUM);
-Button b3(220, 200, 80, 40, false, "RESET", off_clrs, on_clrs, MC_DATUM);
+// Create button instances with specified position, size, label, and color states.
+Button bl(20, 200, 80, 40, false, "RED", off_clrs, on_clrs, MC_DATUM);  // RED button
+Button b2(120, 200, 80, 40, false, "BLUE", off_clrs, on_clrs, MC_DATUM); // BLUE button
+Button b3(220, 200, 80, 40, false, "RESET", off_clrs, on_clrs, MC_DATUM); // RESET button
 
-// Variable to store the currently selected color
-uint16_t currentColor = RED;  
+// Variable to hold the currently selected color.
+uint16_t currentColor = RED; // Default color set to RED
 
+/**
+ * @brief Initializes the M5Tough device and sets up the display.
+ */
 void setup() {
-  // Initialize the M5Tough device
-  M5.begin();
-  // Fill the screen with black color
-  M5.Lcd.fillScreen(BLACK);
-  // Set text size for display
-  M5.Lcd.setTextSize(2);
-  // Set text datum to center the text
-  M5.Lcd.setTextDatum(MC_DATUM);
-  // Draw the buttons on the screen
-  M5.Buttons.draw();
-  // Add event handlers for button taps
-  bl.addHandler(eventDisplayBUTTON1, E_TAP);
-  b2.addHandler(eventDisplayBUTTON2, E_TAP);
-  b3.addHandler(eventDisplayBUTTON3, E_TAP);
+  M5.begin(); // Initialize the M5Tough hardware
+  M5.Lcd.fillScreen(BLACK); // Set the screen background to black
+  M5.Lcd.setTextSize(2); // Set the text size for display
+  M5.Lcd.setTextDatum(MC_DATUM); // Center text for button labels
+  M5.Buttons.draw(); // Render buttons on the screen
+
+  // Attach event handlers for button press events
+  bl.addHandler(eventDisplayBUTTON1, E_TAP); // RED button event
+  b2.addHandler(eventDisplayBUTTON2, E_TAP); // BLUE button event
+  b3.addHandler(eventDisplayBUTTON3, E_TAP); // RESET button event
 }
 
-// Event handler for the RED button
+/**
+ * @brief Event handler for the RED button.
+ * 
+ * Sets the current drawing color to RED when the button is tapped.
+ *
+ * @param e The event object containing event details.
+ */
 void eventDisplayBUTTON1(Event& e) {
-  // Check if the event is a tap
-  if (e.type == E_TAP) {
-    // Set the current color to RED
-    currentColor = RED;  
+  if (e.type == E_TAP) { // Check if the event is a tap
+    currentColor = RED; // Update current color to RED
   }
 }
 
-// Event handler for the BLUE button
+/**
+ * @brief Event handler for the BLUE button.
+ * 
+ * Sets the current drawing color to BLUE when the button is tapped.
+ *
+ * @param e The event object containing event details.
+ */
 void eventDisplayBUTTON2(Event& e) {
-  // Check if the event is a tap
-  if (e.type == E_TAP) {
-    // Set the current color to BLUE
-    currentColor = BLUE; 
+  if (e.type == E_TAP) { // Check if the event is a tap
+    currentColor = BLUE; // Update current color to BLUE
   }
 }
 
-// Event handler for the RESET button
+/**
+ * @brief Event handler for the RESET button.
+ * 
+ * Restarts the ESP32 device when the button is tapped.
+ *
+ * @param e The event object containing event details.
+ */
 void eventDisplayBUTTON3(Event& e) {
-  // Restart the ESP32 device
-  ESP.restart();
+  ESP.restart(); // Restart the ESP32 device
 }
 
+/**
+ * @brief Main loop that handles button events and drawing on the screen.
+ */
 void loop() {
-  // Update the M5Tough state
-  M5.update();
+  M5.update(); // Update the state of the M5Tough device
 
-  // Reference to the button event
-  Event& e = M5.Buttons.event;
+  Event& e = M5.Buttons.event; // Reference to the current button event
 
-  // Check if the event is a movement or gesture
+  // Check if the event indicates a movement or gesture
   if (e & (E_MOVE | E_GESTURE)) {
-    // Draw a circle at the touch position with the current color
-    circle(e.to, currentColor); 
+    circle(e.to, currentColor); // Draw a circle at the touch position with the selected color
   }
 }
 
-// Function to draw a circle at a specified point with a specified color
+/**
+ * @brief Draws a filled circle at a specified point with a specified color.
+ * 
+ * @param p The point where the circle should be drawn.
+ * @param c The color of the circle.
+ */
 void circle(Point p, uint16_t c) {
-  // Fill a circle at (p.x, p.y) with radius 5 and color c
-  M5.Lcd.fillCircle(p.x, p.y, 5, c);
+  M5.Lcd.fillCircle(p.x, p.y, 5, c); // Draw a circle with radius 5 at the specified point
 }

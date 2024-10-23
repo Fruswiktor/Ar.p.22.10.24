@@ -47,8 +47,3 @@ The main loop continuously checks for touch events and draws a circle at the cur
 - If the device does not respond, check the connections and ensure the M5Tough library is correctly installed.
 - If the screen does not display correctly, try resetting the device.
 
-## License
-This project is open-source. Feel free to modify and distribute the code under the terms of the MIT License.
-
-## Acknowledgments
-- Thanks to the M5Stack community for their support and resources.
