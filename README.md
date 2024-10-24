@@ -1,50 +1,38 @@
-# M5Tough Painting App
+# Color Drawing App for M5Tough
 
 ## Overview
-This project utilizes the M5Tough library to create a simple interactive painting application for the M5Tough device. 
-Users can select between two colors (RED or BLUE) and reset the device using three on-screen buttons. 
-The app draws circles in the selected color at the user's touch position.
+
+The **Color Drawing App** is an interactive touchscreen application designed for the **M5Tough** device. This app allows users to create colorful drawings by tapping on the screen, offering an intuitive interface with various color options. Users can easily switch colors, reset the drawing area, and enjoy a smooth drawing experience.
 
 ## Features
-- **Color Selection**: Users can choose between RED and BLUE colors.
-- **Reset Functionality**: The device can be restarted using the reset button.
-- **Interactive Drawing**: Draws circles at the touch position with the selected color.
+
+- **Dynamic Color Selection**: 
+  - **RUBBER Button**: Resets the drawing color to white (used for erasing).
+  - **COLORS Button**: Cycles through a palette of 11 vibrant colors.
+- **Reset Functionality**: 
+  - **RESET Button**: Clears the drawing area, allowing users to start fresh.
+- **Interactive Drawing Area**: 
+  - Draw squares by tapping anywhere within a specified area.
+- **Current Color Display**: 
+  - Displays the currently selected color at the top of the screen for easy reference.
 
 ## Requirements
-- **Hardware**: M5Tough device
-- **Software**: Arduino IDE with M5Tough library installed
 
-## Installation
-1. **Setup the Arduino IDE**: Make sure you have the Arduino IDE installed on your computer.
-2. **Install M5Tough Library**: In the Arduino IDE, go to `Sketch` -> `Include Library` -> `Manage Libraries...`, search for "M5Tough", and install it.
-# M5Tough Touchscreen Drawing Application
-
-## Overview
-This application allows users to draw on a touchscreen using two color buttons (Red and Blue) and a reset button. Users can select a color and draw squares on a designated drawing area by touching the screen. The reset button clears the drawing area.
-
-## Features
-- Touchscreen interaction for drawing
-- Color selection for drawing (Red and Blue)
-- Clear drawing area with the Reset button
-
-## Requirements
+### Hardware
 - M5Tough device
-- Arduino IDE with M5Tough library installed
+
+### Software
+- Arduino IDE (latest version recommended)
+
+### Libraries
+- **M5Tough Library**: Ensure you have the library installed for touchscreen functionality.
+- **Arduino Core Library**
 
 ## Installation
-1. Clone this repository or download the source code.
-2. Open the Arduino IDE.
-3. Create a new project and copy the code into the editor.
-4. Install the M5Tough library via the Library Manager (Sketch > Include Library > Manage Libraries).
-5. Connect your M5Tough device to your computer.
-6. Select the correct board and port from the Tools menu.
-7. Upload the code to the device.
 
-## Usage
-- Press the "RED" button to select red color for drawing.
-- Press the "BLUE" button to select blue color for drawing.
-- Touch within the drawing area to draw squares.
-- Press the "RESET" button to clear the drawing area.
+Follow these steps to set up the Color Drawing App on your M5Tough:
 
-## Author
-[Frus]
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/yourusername/ColorDrawingApp.git
+   cd ColorDrawingApp
