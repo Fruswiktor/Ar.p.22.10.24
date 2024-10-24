@@ -4,48 +4,54 @@
 ButtonColors on_clrs = {GREEN, WHITE, WHITE};  
 ButtonColors off_clrs = {BLACK, WHITE, WHITE};  
 
-Button bl(20, 200, 80, 40, false, "RED", off_clrs, on_clrs, MC_DATUM); 
-Button b2(120, 200, 80, 40, false, "BLUE", off_clrs, on_clrs, MC_DATUM);
-Button b3(220, 200, 80, 40, false, "RESET", off_clrs, on_clrs, MC_DATUM); 
+Button rubberButton(20, 200, 80, 40, false, "RUBBER", off_clrs, on_clrs, MC_DATUM); 
+Button colorsButton(120, 200, 80, 40, false, "COLORS", off_clrs, on_clrs, MC_DATUM);
+Button resetButton(220, 200, 80, 40, false, "RESET", off_clrs, on_clrs, MC_DATUM); 
 
 const int drawingAreaX = 20;           
 const int drawingAreaY = 20;           
 const int drawingAreaWidth = 280;      
 const int drawingAreaHeight = 160;     
 
-uint16_t currentColor = RED;            ///< Variable to store the current drawing color.
+uint16_t currentColor = WHITE;  // Default color is now WHITE for "RUBBER"
+uint16_t colorPalette[11] = {RED, GREEN, BLUE, YELLOW, MAGENTA, CYAN, 
+                              ORANGE, PURPLE, PINK, LIGHTGREY, DARKGREY}; // Expanded color palette
+const char* colorNames[11] = {"RED", "GREEN", "BLUE", "YELLOW", "MAGENTA", "CYAN", 
+                                "ORANGE", "PURPLE", "PINK", "LIGHTGREY", "DARKGREY"}; // Expanded color names
+int currentColorIndex = 0;  // Index for the current color in the palette
 
 void setup() {
     M5.begin();  
     M5.Lcd.fillScreen(BLACK);  
     M5.Lcd.fillRect(drawingAreaX, drawingAreaY, drawingAreaWidth, drawingAreaHeight, WHITE);
-    M5.Lcd.setTextSize(1);  // Zmniejsz rozmiar tekstu
+    M5.Lcd.setTextSize(1);
     M5.Lcd.setTextDatum(MC_DATUM);  
     M5.Buttons.draw();  
 
     // Add event handlers for button taps.
-    bl.addHandler(eventDisplayBUTTON1, E_TAP);  
-    b2.addHandler(eventDisplayBUTTON2, E_TAP);  
-    b3.addHandler(eventDisplayBUTTON3, E_TAP);  
+    rubberButton.addHandler(eventDisplayRUBBER, E_TAP);  
+    colorsButton.addHandler(eventDisplayCOLORS, E_TAP);  
+    resetButton.addHandler(eventDisplayRESET, E_TAP);  
 
     displayCurrentColor();  // Display the initial color.
 }
 
-void eventDisplayBUTTON1(Event& e) {
+void eventDisplayRUBBER(Event& e) {
     if (e.type == E_TAP) { 
-        currentColor = RED;  
+        currentColor = WHITE;  
         displayCurrentColor();  // Update the displayed color.
     }
 }
 
-void eventDisplayBUTTON2(Event& e) {
+void eventDisplayCOLORS(Event& e) {
     if (e.type == E_TAP) { 
-        currentColor = BLUE;  
+        currentColorIndex = (currentColorIndex + 1) % 11;  // Cycle through the color palette
+        currentColor = colorPalette[currentColorIndex];
         displayCurrentColor();  // Update the displayed color.
     }
 }
 
-void eventDisplayBUTTON3(Event& e) {
+void eventDisplayRESET(Event& e) {
     if (e.type == E_TAP) {  
         M5.Lcd.fillScreen(BLACK);  
         M5.Lcd.fillRect(drawingAreaX, drawingAreaY, drawingAreaWidth, drawingAreaHeight, WHITE);
@@ -80,16 +86,16 @@ void drawSquare(Point p, uint16_t c) {
  * @brief Display the current drawing color at the top of the screen.
  */
 void displayCurrentColor() {
-    // Wyczyść obszar, w którym będzie wyświetlany kolor
-    M5.Lcd.fillRect(150, 0, 300, 20, BLACK);  // Zmodyfikuj wymiary, jeśli to konieczne
+    // Clear the area where the color will be displayed
+    M5.Lcd.fillRect(150, 0, 300, 20, BLACK);  
 
     M5.Lcd.setTextColor(WHITE);
-    M5.Lcd.drawString("Current Color: ", 150, 5);  // Display label
-    if (currentColor == RED) {
-        M5.Lcd.setTextColor(RED);
-        M5.Lcd.drawString("RED", 250, 5);  // Display current color
+    M5.Lcd.drawString("Current Color: ", 100, 5);  // Move label slightly to the left
+    M5.Lcd.setTextColor(currentColor);
+    if (currentColor == WHITE) {
+        M5.Lcd.drawString("RUBBER", 250, 5);  // Display current color for RUBBER
     } else {
-        M5.Lcd.setTextColor(BLUE);
-        M5.Lcd.drawString("BLUE", 250, 5);  // Display current color
+        M5.Lcd.drawString(colorNames[currentColorIndex], 220, 5);  // Display current color name
+        M5.Lcd.drawString(String(currentColorIndex + 1) + "/11", 350, 5);  // Display color index
     }
 }
