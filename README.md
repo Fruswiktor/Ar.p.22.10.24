@@ -28,11 +28,4 @@ The **Color Drawing App** is an interactive touchscreen application designed for
 - **M5Tough Library**: Ensure you have the library installed for touchscreen functionality.
 - **Arduino Core Library**
 
-## Installation
 
-Follow these steps to set up the Color Drawing App on your M5Tough:
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/yourusername/ColorDrawingApp.git
-   cd ColorDrawingApp
